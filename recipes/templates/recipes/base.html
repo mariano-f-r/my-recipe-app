@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if title %}
+    <title>{{ title }} - Recipe App</title>
+    {% else %}
+    <title>Recipe App</title>
+    {% endif %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="{% static 'recipes/main.css' %}">
+    <script src="https://kit.fontawesome.com/0bcdcb29c6.js" crossorigin="anonymous"></script>
+    <script src="{% static 'recipes/main.js' %}"></script>
+</head>
+
+<body>
+    {% include 'recipes/snippets/navbar.html' %}
+
+    {% if messages %}
+        {% for message in messages %}
+        {% include 'recipes/snippets/notification.html' %}
+        {% endfor %}
+    {% endif %}
+    {% block content %}
+    {% endblock %}
+
+    {% include 'recipes/snippets/footer.html' %}
+</body>
+
+</html>

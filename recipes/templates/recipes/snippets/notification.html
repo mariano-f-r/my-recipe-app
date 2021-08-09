@@ -1,0 +1,11 @@
+{% ifequal message.tags 'error' %}
+    <div class="notification is-danger">
+        <button class="delete"></button>
+        {{ message }}
+    </div>
+{% else %}
+    <div class="notification is-{{ message.tags }}">
+        <button class="delete"></button>
+        {{ message }}
+    </div>
+{% endifequal %}

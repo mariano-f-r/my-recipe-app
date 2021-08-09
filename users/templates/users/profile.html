@@ -1,0 +1,102 @@
+{% extends "recipes/base.html" %}
+{% block content %}
+<section class="section columns">
+    <div class="column is-one-quarter">
+        <div class="box">
+            <h1 class="title">{{ profile.username }}</h1>
+            {% if profile.profile.name %}
+            <h2 class="subtitle">{{ profile.profile.name }}</h2>
+            {% endif %}
+            {% if profile.profile.bio %}
+            <hr>
+            <h2 class="subtitle">Bio</h2>
+            <p>
+                {{ profile.profile.bio }}
+            </p>
+            {% endif %}
+            {% if profile.profile.email %}
+            <hr>
+            <h2 class="subtitle">Email</h2>
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-envelope"></i>
+                </span>
+                <a href="mailto:{{ profile.profile.email }}"><span>{{ profile.profile.email }}</span></a>
+            </span>
+            {% endif %}
+            {% if user.is_authenticated and user.username == profile.username %}
+            <hr>
+            <a href="{% url 'profile-update' user.profile.pk %}" class="button is-fullwidth">Edit Profile</a>
+            <br>
+            <a href="{% url 'account-update' %}" class="button is-fullwidth">Edit Account</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="column is-half">
+        <div class="box">
+            <h1 class="title has-text-centered">{{ profile.username }}'s Recipes</h1>
+            <div class="tabs is-centered">
+                <ul>
+                    <li class="is-active"><a href="{% url 'profile-detail' profile.pk %}">Latest</a></li>
+                    <li><a href="{% url 'profile-list' profile.pk %}">All</a></li>
+                </ul>
+            </div>
+        </div>
+        {% if recipes %}
+            <div class="tile is-parent">
+                <div class="tile is-child box">
+                    <article class="media">
+                        <div class="media-content">
+                            <div class="content">
+                                <small>Posted on {{ recipes.first.date }}</small>
+                                <p class="title">{{ recipes.first.name }}</p>
+                                <div class="block">
+                                    {{ recipes.first.description }}
+                                </div>
+                            </div>
+                            <nav class="level is-mobile">
+                                <div class="level-left">
+                                    <a href="{{ recipes.first.get_absolute_url }}" class="level-item button is-info">
+                                        <span class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                            <span>View</span>
+                                        </span>
+                                    </a>
+                                </div>
+                            </nav>
+                        </div>
+                        <div class="media-right has-text-right">
+                            <small>{{ recipes.first.prep_time.title }} Prep Time</small>
+                            <br>
+                            <small>Serves {{ recipes.first.servings }}</small>
+                            <br>
+                            <small>Level: {{ recipes.first.difficulty.title }}</small>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        {% if not user.authenticated %}
+        <br>
+        <br>
+        <br>
+        <br>
+        {% endif %}
+        {% else %}
+        <div class="box">
+            <h1 class="title">This user has no recipes</h1>
+            <p>Maybe they will post one soon</p>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

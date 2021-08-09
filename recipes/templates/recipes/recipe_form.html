@@ -1,0 +1,220 @@
+{% extends "recipes/base.html" %}
+{% block content %}
+<section class="section">
+    <form id="RecipeForm" method="POST">
+        {% if recipeformerrors %}
+        <div class="notification is-danger">
+            <button class="delete"></button>
+            {% for field, error in recipeformerrors.items %}
+            {{ field.title }} is invalid:{{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="box">
+            <h1 class="title">Create a Recipe</h1>
+            {% csrf_token %}
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" name="name" type="text" placeholder="Enter the name of this recipe">
+                </div>
+                <p class="help">Must be less than 100 characters in length</p>
+            </div>
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                    <textarea name="description" class="textarea" placeholder="Describe this recipe"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Prep Time</label>
+                <div class="select">
+                    <select name="prep_time">
+                        <option value="short">Short (&lt;20m)</option>
+                        <option value="medium">Medium (20m-1h)</option>
+                        <option value="long">Long (&gt;1h)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Difficulty</label>
+                <div class="select">
+                    <select name="difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="long">Long</option>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Servings</label>
+                <div class="control">
+                    <input class="input" name="servings" type="number"
+                        placeholder="Enter the amount of servings your recipe yields">
+                </div>
+                <p class="help">Must be a positive number, otherwise defaults to 1</p>
+            </div>
+        </div>
+        {% if ingredientformerrors %}
+        <div class="notification is-danger">
+            <button class="delete"></button>
+            {% for error in ingredientformerrors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div id="ingredients" class="box">
+            <h1 class="title">Ingredients</h1>
+            <div class="field">
+                <label class="label">Write the ingredient</label>
+                <div class="control">
+                    <input name="ingredient-1" class="input" type="text"
+                        placeholder="Enter the name of this ingredient"></textarea>
+                </div>
+                <p class="help">Must be less than 100 characters in length</p>
+            </div>
+        </div>
+        <div class="box">
+            <div class="buttons">
+                <button type="button" class="button is-success" onclick="NewIngredient()">New Ingredient</button>
+                <button id="ingredient-delete" type="button" class="button is-danger" onclick="DeleteIngredient()">Delete Ingredient</button>   
+            </div>
+            <small id="ingredient-alert" class="help is-danger"></small>
+        </div>
+        {% if stepformerrors %}
+        <div class="notification is-danger">
+            <button class="delete"></button>
+            {% for error in stepformerrors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div id="steps" class="box">
+            <h1 class="title">Steps</h1>
+            <div class="field">
+                <label class="label">Write step 1</label>
+                <div class="control">
+                    <input name="step-1" class="input" type="text" placeholder="Describe this step"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="box">
+            <div class="buttons">
+                <button type="button" class="button is-success" onclick="NewStep()">New Step</button>
+                <button id="step-delete" type="button" class="button is-danger" onclick="DeleteStep()">Delete Step</button>
+            </div>
+            <small id="step-alert" class="help is-danger"></small>
+        </div>
+    </form>
+    <br>
+    <div class="box">
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-success" onclick="SubmitAllForms()">Create</button>
+            </div>
+            <div class="control">
+                <a href="{% url 'home' %}" class="button is-link is-danger">Cancel</a>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var ingredients = 1
+    var steps = 1
+
+    function SubmitAllForms() {
+        document.getElementById("RecipeForm").submit();
+    }
+    function StepDeleteOn() {
+        const button = document.getElementById("step-delete");
+        button.disabled=false
+    }
+    function StepDeleteOff() {
+        const button = document.getElementById("step-delete");
+        button.disabled=true
+    }
+    function NewStep() {
+        StepDeleteOn();
+        steps = steps + 1
+        const stepfield = document.createElement("div");
+        stepfield.classList.add("field");
+        stepfield.classList.add("new-field");
+        const label = document.createElement("label");
+        label.classList.add("label");
+        const labeltext = document.createTextNode(`Write step ${steps}`);
+        stepfield.appendChild(label);
+        label.appendChild(labeltext);
+        const inputdiv = document.createElement("div");
+        inputdiv.classList.add("control");
+        const input = document.createElement("input");
+        input.classList.add("input");
+        input.name = `step-${steps}`;
+        input.type = "text";
+        input.placeholder = "Descripe this step";
+        stepfield.appendChild(inputdiv);
+        inputdiv.appendChild(input);
+
+        stepdiv = document.getElementById("steps");
+        stepdiv.appendChild(stepfield);
+    }
+
+    function DeleteStep() {
+        parent=document.getElementById("steps");
+        child=parent.children.item(parent.children.length-1);
+        if (child.classList.contains('new-field')) {    
+            steps = steps - 1;
+            child.remove();
+        } else {
+            StepDeleteOff();
+            stepalert=document.getElementById("step-alert");
+            stepalert.innerHTML="You must have at least one step";
+        }
+    }
+    function IngredientDeleteOn() {
+        const button = document.getElementById("ingredient-delete");
+        button.disabled=false;
+    }
+    function IngredientDeleteOff() {
+        const button = document.getElementById("ingredient-delete");
+        button.disabled=true;
+    }
+    function NewIngredient() {
+        IngredientDeleteOn();
+        ingredients = ingredients + 1;
+        const ingredientfield = document.createElement("div");
+        ingredientfield.classList.add("field");
+        ingredientfield.classList.add("new-field");
+        const label = document.createElement("label");
+        label.classList.add("label");
+        const labeltext = document.createTextNode("Write the ingredient");
+        ingredientfield.appendChild(label);
+        label.appendChild(labeltext);
+        const inputdiv = document.createElement("div");
+        inputdiv.classList.add("control");
+        const input = document.createElement("input");
+        input.classList.add("input");
+        input.name = `ingredient-${ingredients}`;
+        input.type = "text";
+        input.placeholder = "Enter the name of this ingredient";
+        ingredientfield.appendChild(inputdiv);
+        inputdiv.appendChild(input);
+
+        ingredientdiv = document.getElementById("ingredients");
+        ingredientdiv.appendChild(ingredientfield);
+    }
+
+    function DeleteIngredient() {
+        parent=document.getElementById("ingredients");
+        child=parent.children.item(parent.children.length-1);
+        if (child.classList.contains('new-field')) {
+            ingredients = ingredients - 1;
+            child.remove();
+        } else {
+            IngredientDeleteOff()
+            stepalert=document.getElementById("ingredient-alert");
+            stepalert.innerHTML="You must have at least one ingredient";
+        }
+    }
+
+</script>
+{% endblock %}

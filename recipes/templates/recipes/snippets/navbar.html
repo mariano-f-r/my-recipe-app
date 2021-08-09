@@ -1,0 +1,82 @@
+{% load static %}
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="{% url 'home' %}">
+      <img src="{% static 'recipes/logo.png' %}" width="" height="">
+    </a>
+
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navMenu" class="navbar-menu">
+    <div class="navbar-start">
+      <a href="{% url 'home' %}" class="navbar-item">
+        Home
+      </a>
+      <a href="{% url 'about' %}" class="navbar-item">
+        About
+      </a>
+    </div>
+
+    <div class="navbar-end">
+      {% if user.is_authenticated %}
+      <div id="navDropdown" class="navbar-item has-dropdown is-hoverable">
+        <p class="navbar-link" href="">
+          Currently signed in as {{ user.username }}
+        </p>
+        <div class="navbar-dropdown is-right is-boxed">
+          <a class="navbar-item" href="{% url 'recipe-create' %}">
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fas fa-plus"></i>
+              </span>
+              <span>New Post</span>
+            </span>
+          </a>
+          <hr class="navbar-divider" >
+          <a class="navbar-item" href="{{ user.profile.get_absolute_url }}">
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fas fa-user-circle"></i>
+              </span>
+              <span>My Profile</span>
+            </span>
+          </a>
+          <a class="navbar-item" href="{% url 'profile-list' user.pk %}">
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fas fa-book"></i>
+              </span>
+              <span>My Recipes</span>
+            </span>
+          </a>
+          <hr class="navbar-divider">
+          <a class="navbar-item" href="{% url 'logout' %}">
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fas fa-sign-out-alt"></i>
+              </span>
+              <span>Log Out</span>
+            </span>
+          </a>
+        </div>
+      </div>
+      {% else %}
+      <div class="navbar-item">
+        <div class="buttons">
+          <a href="{% url 'register' %}" class="button is-info">
+            <strong>Sign up</strong>
+          </a>
+          <a href="{% url 'login' %}" class="button is-light">
+            Log in
+          </a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,195 @@
+{% extends "recipes/base.html" %}
+{% block content %}
+<section class="section">
+  <div class="box">
+    <div class="block has-text-centered">
+      <h2 class="subtitle is-6">Recipe written by <a href="{{ recipe.author.profile.get_absolute_url }}">{{ recipe.author }}</a></h2>
+      <h1 class="title is-1">{{ recipe.name }}</h1>
+      <p>
+        {{ recipe.description }}
+      </p>
+    </div>
+    <div class="level">
+      <div class="level-item has-text-centered">
+        <button onclick="showComments()" class="button is-info">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fas fa-comment"></i>
+            </span>
+            <span>Comment</span>
+          </span>
+        </button>
+      </div>
+      <div class="level-item has-text-centered">
+        <button class="button is-link modal-button" data-target="shareModal">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fas fa-link"></i>
+            </span>
+            <span>Share</span>
+          </span>
+        </button>
+      </div>
+      <div class="level-item has-text-centered">
+        <button onclick="window.print()" class="button is-link">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fas fa-print"></i>
+            </span>
+            <span>Print</span>
+          </span>
+        </button>
+      </div>
+      {% if recipe.author == request.user %}
+      <!-- <div class="level-item has-text-centered">
+        <a href="#" class="button is-light">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fas fa-edit"></i>
+            </span>
+            <span>Edit</span>
+          </span>
+        </a>
+      </div> -->
+      <div class="level-item has-text-centered">
+        <a href="{% url 'recipe-delete' recipe.id %}" class="button is-danger">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fas fa-trash"></i>
+            </span>
+            <span>Delete</span>
+          </span>
+        </a>
+      </div>
+      {% endif %}
+    </div>
+    <hr>
+    <div class="level">
+      <div class="level-item has-text-centered">
+        <div>
+          <p class="heading">Level</p>
+          <p class="title">{{ recipe.difficulty.title }}</p>
+        </div>
+      </div>
+      <div class="level-item has-text-centered">
+        <div>
+          <p class="heading">Prep Time</p>
+          <p class="title">{{ recipe.prep_time.title }}</p>
+        </div>
+      </div>
+      <div class="level-item has-text-centered">
+        <div>
+          <p class="heading">Servings</p>
+          <p class="title">{{ recipe.servings }}</p>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="columns">
+      <div class="column is-one-third">
+        <h2 class="title">Ingredients</h2>
+        <hr>
+        {% for ingredient in ingredients %}
+        <p class=""><strong>{{ ingredient.ingredient.title }}</strong></p>
+        {% endfor %}
+      </div>
+      <div class="column">
+        <h2 class="title">Directions</h2>
+        <hr>
+        {% for step in steps %}
+        <div class="content">
+          <h3 class="title">Step {{ step.number }}</h3>
+          {{ step.step }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <h1 class="title is-1 has-text-centered" id="commentSection">Comments</h1>
+  {% if user.is_authenticated %}
+  <div class="box">
+    <h2 class="title">Write a comment</h2>
+    <form method="POST">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+      <div class="notification is-danger">
+        <button class="delete"></button>
+        {% for non_field_error in form.non_field_errors %}
+        {{ non_field_error }}
+        {% endfor %}
+      </div>
+      {% endif %}
+      {# for field in form.hidden_fields #}
+      {#{{ field }}#}
+      {# endfor #}
+      {% for field in form.visible_fields %}
+      {% include 'recipes/snippets/field.html' %}
+      {% endfor %}
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-success" type="submit">Post</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  {% endif %}
+  {% if comments %}
+  {% for comment in comments %}
+  <div class="box">
+    <article class="media">
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <a href="{{ comment.author.profile.get_absolute_url }}"><strong>{{ comment.author }}</strong></a>
+            <small>Posted on {{ comment.date }}</small>
+            <hr>
+            {{ comment.content }}
+          </p>
+        </div>
+      </div>
+    </article>
+  </div>
+  {% endfor %}
+  {% else %}
+  <h2 class="title has-text-centered">
+    No comments here. Be the first!
+  </h2>
+  {% endif %}
+</section>
+<div id="shareModal" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+    <div class="box has-text-centered">
+      <div class="block">
+        <h1 class="title">Share</h1>
+        <p id="shareLink">{{ request.build_absolute_uri }}</p>
+        <hr>
+        <small id=copyConfirm></small>
+      </div>
+      <button class="button is-link" onclick="copy_text()">Copy</button>
+    </div>
+  </div>
+  <button class="modal-close is-large" aria-label="close"></button>
+</div>
+<script>
+  function showComments() {
+    document.getElementById("commentSection").scrollIntoView({
+      behavior: 'smooth'
+    });
+  }
+  function copy_text() {
+    //Before we copy, we are going to select the text.
+    var text = document.getElementById('shareLink');
+    var selection = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(text);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    //add to clipboard.
+    document.execCommand('copy');
+    document.getElementById("copyConfirm").innerHTML = "Copied to Clipboard";
+  }
+</script>
+{% endblock %}

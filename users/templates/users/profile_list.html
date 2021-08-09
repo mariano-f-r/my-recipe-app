@@ -1,0 +1,110 @@
+{% extends "recipes/base.html" %}
+{% block content %}
+<section class="section {% if not recipes %}is-medium{% endif %} columns">
+    <div class="column is-one-quarter">
+        <div class="box">
+            <h1 class="title">{{ profile.username }}</h1>
+            {% if profile.profile.name %}
+            <h2 class="subtitle">{{ profile.profile.name }}</h2>
+            {% endif %}
+            {% if profile.profile.bio %}
+            <hr>
+            <h2 class="subtitle">Bio</h2>
+            <p>
+                {{ profile.profile.bio }}
+            </p>
+            {% endif %}
+            {% if profile.profile.email %}
+            <hr>
+            <h2 class="subtitle">Email</h2>
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-envelope"></i>
+                </span>
+                <a href="mailto:{{ profile.profile.email }}"><span>{{ profile.profile.email }}</span></a>
+            </span>
+            {% endif %}
+            {% if user.is_authenticated and user.username == profile.username %}
+            <hr>
+            <a href="{% url 'profile-update' user.profile.pk %}" class="button is-fullwidth">Edit Profile</a>
+            <br>
+            <a href="{% url 'account-update' %}" class="button is-fullwidth">Edit Account</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="column is-half">
+        <div class="box">
+            <h1 class="title has-text-centered">{{ profile.username }}'s Recipes</h1>
+            <div class="tabs is-centered">
+                <ul>
+                    <li><a href="{% url 'profile-detail' profile.pk %}">Latest</a></li>
+                    <li class="is-active"><a href="{% url 'profile-list' profile.pk %}">All</a></li>
+                </ul>
+            </div>
+        </div>
+        {% for recipe in recipes %}
+        <div class="box">
+            <article class="media">
+                <div class="media-content">
+                    <div class="content">
+                        <small>Posted on {{ recipe.date }}</small>
+                        <p class="title">{{ recipe.name }}</p>
+                        <div class="block">
+                            {{ recipe.description }}
+                        </div>
+                    </div>
+                    <nav class="level is-mobile">
+                        <div class="level-left">
+                            <a href="{{ recipe.get_absolute_url }}" class="level-item button is-info">
+                                <span class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-eye"></i>
+                                    </span>
+                                    <span>View</span>
+                                </span>
+                            </a>
+                        </div>
+                    </nav>
+                </div>
+                <div class="media-right has-text-right">
+                    <small>{{ recipe.prep_time.title }} Prep Time</small>
+                    <br>
+                    <small>Serves {{ recipe.servings }}</small>
+                    <br>
+                    <small>Level: {{ recipe.difficulty.title }}</small>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+        {% if is_paginated %}
+        <div class="box">
+            <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="pagination-previous">Previous</a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="pagination-next">Next</a>
+                {% endif %}
+                <ul class="pagination-list">
+                    {% if page_obj.has_previous %}
+                    <li><a href="?page=1" class="pagination-link">First</a></li>
+                    <li><span class="pagination-ellipsis">&hellip;</span></li>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li><a href="?page={{ num }}" class="pagination-link is-current">{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <li><a
+                            href="?page={{ num }}" class="pagination-link">{{ num }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                        <li><span class="pagination-ellipsis">&hellip;</span></li>
+                        <li><a href="?page={{ page_obj.paginator.num_pages }}" class="pagination-link">Last</a></li>
+                        {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

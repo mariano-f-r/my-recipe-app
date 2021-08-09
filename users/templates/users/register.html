@@ -1,0 +1,36 @@
+{% extends "recipes/base.html" %}
+{% block content %}
+<section class="section
+">
+    <div class="box">
+        <h1 class="title">Join Now</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="notification is-danger">
+                    <button class="delete"></button>
+                    {% for non_field_error in form.non_field_errors %}
+                        {{ non_field_error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {# for field in form.hidden_fields #}
+                {#{{ field }}#}
+            {# endfor #}
+            {% for field in form.visible_fields %}
+                {% include 'recipes/snippets/field.html' %}
+            {% endfor %}
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-success" type="submit">Sign Up</button>
+                </div>
+                <div class="control">
+                    <a href="{% url 'home' %}" class="button is-danger">Cancel</a>
+                </div>
+            </div>
+            <hr>
+            <small>Already have an account? <a href="{% url 'login' %}">Log In</a></small>
+        </form>
+    </div>
+</section>
+{% endblock %}

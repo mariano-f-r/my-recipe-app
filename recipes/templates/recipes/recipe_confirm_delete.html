@@ -1,0 +1,21 @@
+{% extends "recipes/base.html" %}
+{% block content %}
+<section class="section is-medium">
+    <form id="RecipeForm" method="POST">
+        {% csrf_token %}
+        <div class="box">
+            <h1 class="title">Are you sure you want to delete your Recipe?</h1>
+            <h2 class="subtitle">Will delete recipe "{{ recipe.name }}"</h2>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-danger" type="submit">Yes, Delete</button>
+                </div>
+                <div class="control">
+                    <a href="{% url 'recipe-detail' object.id %}" class="button is-info is-inverted">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br>
+</section>
+{% endblock %}
