@@ -27,6 +27,7 @@ This project uses the Git flow workflow. This means that there will only ever be
 Main | This is what is running in production. This branch will be open at all time. Ideally, everything here should be bug free and deployable.
 Development | This is where the next release is being built. This branch will also be open at all time.
 Feature | Branched off the development branch, this is where new features are written. Once those features are finished, if the feature is approved, the branch is merged into the development branch and closed. Otherwise it is just closed.
+Note: All new code, including the addition of code commenting, additions to README/CONTRIBUTING, etc, should be done this way.
 Release | Once a set number of features is met, which in this case would be 5, a release branch is created off of the development branch. In this branch, development code is tested, and prepared for release. Once this is done, the release branch is merged into both development and main, and then closed.
 Bugfix | These branches are branched of main in the event of any bug. Once the bugs are fixed, the branch is merged back into main, development, and the closed
 
