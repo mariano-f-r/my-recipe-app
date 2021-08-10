@@ -53,7 +53,7 @@ Here is how to set up on Linux/Mac (Windows instructions also included).
 ```
 7. Copy all of the output inside the quotes. Inside the .env file, write the following:
 ```
-token='3113dc10caed41bb030529f331f1ad2f2f19918498048f77'
+token='<paste output here>'
 debug='True'
 ```
 8. Lastly, run `../env/bin/python3 manage.py migrate` (Windows: `..\env\Scripts\python3 manage.py migrate`), to create the SQL tables, and `../env/bin/python3 manage.py createsuperuser` (Windows: `..\env\Scripts\python3 manage.py createsuperuser`), to create an admin account.
