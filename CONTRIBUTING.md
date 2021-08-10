@@ -1,0 +1,1 @@
+# Contributing to my-recipe-app
