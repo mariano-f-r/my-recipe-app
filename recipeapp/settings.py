@@ -35,7 +35,7 @@ else:
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    'testdeploymentapplication.herokuapp.com',
+    'django-recipeapp.herokuapp.com',
 ]
 
 
