@@ -60,7 +60,9 @@ debug='True'
 
 ### Adding code
 
-For all new branches, please prefix the branch name with the type of branch it is, either "feature/\<feature-name>", or "bugfix/\<bug-name>". This makes it a lot easier for maintainers.
+For all new branches, please prefix the branch name with the type of branch it is, either "feature/\<feature-name>", or "bugfix/\<bug-name>".
+This makes it a lot easier for maintainers.
+Also when creating pull requests, name them after the type of branch they are (ie, "FEATURE: \<name here>", or "BUGFIX: \<name here>")
 
 To create a new feature, create a new branch off the development branch. Write your code, and then create a pull request on the development branch.
 
