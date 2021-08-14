@@ -5,13 +5,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% if title %}
-    <title>{{ title }} - Recipe App</title>
+    {% if recipe %}
+    <title>{{ recipe.name }} - Recipe App</title>
     {% else %}
     <title>Recipe App</title>
     {% endif %}
     {% if recipe %}
-    <meta content="{{ recipe.title }} by {{ recipe.author }}" property="og:title" />
+    <meta content="{{ recipe.name }} by {{ recipe.author }}" property="og:title" />
 	<meta content="{{ recipe.description }}" property="og:description" />
 	<meta content="{{ request.build_absolute_uri }}" property="og:url" />
 	<meta property="og:image" content="{% static 'recipes/banner.jpg' %}">
