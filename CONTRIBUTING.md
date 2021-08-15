@@ -20,7 +20,7 @@ Here are guidelines on how you can contribute code.
 
 ### Branch Structure
 
-This project uses the Git flow workflow. This means that there will only ever be **5** (five) types of branches as seen below.
+This project uses the Git flow workflow. This means that there are **5** (five) types of branches as seen below.
 
  Branch Type | Purpose
 ------------ | -------------
@@ -29,6 +29,12 @@ Development | This is where the next release is being built. This branch will al
 Feature | Branched off the development branch, this is where new features are written. Once those features are finished, if the feature is approved, the branch is merged into the development branch and closed. Otherwise it is just closed.Note: All new code, including the addition of code commenting, additions to README/CONTRIBUTING, etc, should be done this way.
 Release | Once a set number of features is met, which in this case would be 5, a release branch is created off of the development branch. In this branch, development code is tested, and prepared for release. Once this is done, the release branch is merged into both development and main, and then closed.
 Bugfix | These branches are branched of main in the event of any bug. Once the bugs are fixed, the branch is merged back into main, development, and the closed
+
+Additionally, we have an additional branch type not found in Git flow.
+
+Branch Type | Purpose
+----------- | -------------
+Chore | These branches are handled in the same way as Features, except they deal with trivial matters such as updating the README, CONTRIBUTING, and other aspects that have no impact on the site.
 
 ### Setting up locally
 
@@ -44,8 +50,8 @@ Here is how to set up on Linux/Mac (Windows instructions also included).
 2. From the terminal, run `source env/bin/activate` (Note: Use the apropriate activation file for your shell) to activate the virtual environment (On Windows: `source env\Scripts\activate`). 
 3. Install the local dependencies (Django), by doing `env/bin/python3 - m pip install django python-dotenv django-on-heroku`. (`env\Scripts\python3 -m pip install django python-dotenv django-on-heroku` on Windows)
 4. Clone the repository using git (`git clone <url>`. You can find the URL by clicking the "code" tab, and then clicking on the "Code" dropdown).
-5. Next, enter the new directory created by git, and create a new file called ".env". 
-6. Now it's time to generate a secret token to use in your development version of the app. To do this, pull up a Python shell (`python3` on Linux and Mac, and `python` on Windows). Next run the following:
+5. Next, enter the new directory created by git, run `git checkout development` and create a new file called ".env". 
+6. Now it's time to generate a secret token to use in your development version of the app. To do this, pull up a Python shell (`python3` on Linux and Mac, and `python` on Windows) and run the following:
 ```python
 >>> import secrets
 >>> secrets.token_hex(24)
@@ -60,12 +66,14 @@ debug='True'
 
 ### Adding code
 
-For all new branches, please prefix the branch name with the type of branch it is, either "feature/\<feature-name>", or "bugfix/\<bug-name>".
+For all new branches, please prefix the branch name with the type of branch it is, either "feature/\<feature-name>", or "chore/\<chore-name>".
 This makes it a lot easier for maintainers.
-Also when creating pull requests, name them after the type of branch they are (ie, "FEATURE: \<name here>", or "BUGFIX: \<name here>")
+Also when creating pull requests, title them after the type of branch they are (ie, "FEATURE: \<name here>", or "CHORE: \<name here>")
 
 To create a new feature, create a new branch off the development branch. Write your code, and then create a pull request on the development branch.
 
 To create a new bugfix, create a new branch off the main branch. Patch the bug, and then open a pull request on the main branch.
+
+To create a new chore, create a new branch of development. Add/Edit the files, and open a pull request.
 
 Releases will be handled by maintainers.
