@@ -3,7 +3,7 @@
 ## About
 
 This project is an open source web app with Python's Django backend. 
-You can find the app [here](https://django-recipeapp.herokuapp.com/). 
+~~You can find the app [here](https://django-recipeapp.herokuapp.com/)~~. Heroku is disabling free tier, meaning that this app is going offline. 
 Note: As of today, it is being prepared for deployment and is not yet live.
 
 ## Contributing
